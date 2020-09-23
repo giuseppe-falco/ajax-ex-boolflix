@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css'>
+    <link rel="stylesheet" href="css/style.css">
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js'></script>
-
-    <title>Document</title>
+    <title>Boolflix</title>
 </head>
 <body>
     <div class="container">
         <input id="search-input" type="text">
         <button id="search-button">Cerca</button>
         <div class="wrapper">
-          
         </div>
     </div>
     <script id="film-template" type="text/x-handlebars-template">
@@ -21,8 +21,23 @@
         <h2>Titolo: {{title}}</h2>
         <h2>Titolo originale: {{originalTitle}}</h2>
         <p>Lingua originale: {{language}}</p>
-        <p>Apprezzato da {{popularity}} utenti</p>
-        <p> Mi piace {{vote}}</p>
+        <p>Voto medio {{vote}}/5
+          <ul class="star-vote">
+            <li><i class="far fa-star"></i></li>
+            <li><i class="far fa-star"></i></li>
+            <li><i class="far fa-star"></i></li>
+            <li><i class="far fa-star"></i></li>
+            <li><i class="far fa-star"></i></li>
+            <ul class="star-vote-intro">
+              <li><i class="fas fa-star"></i></li>
+              <li><i class="fas fa-star"></i></li>
+              <li><i class="fas fa-star"></i></li>
+              <li><i class="fas fa-star"></i></li>
+              <li><i class="fas fa-star"></i></li>
+            </ul>
+          </ul>
+        </p>
+        <p>{{voteNumber}} persone hanno votato</p>
       </div>
     </script>
     <script src="js/script.js"></script>

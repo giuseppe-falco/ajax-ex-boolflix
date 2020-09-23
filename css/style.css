@@ -1,0 +1,44 @@
+ 	* { 
+     margin: 0;
+    padding: 0;
+    box-sizing:border-box;
+ }	
+
+ .container{
+    margin-left:50px;
+ }
+
+ .star-vote{
+    list-style: none;
+    margin:10px 0;
+
+    position: relative;
+    width: 125px;
+     
+ }
+
+ .fa-star{
+     font-size: 16px;
+     margin:0 1px;
+ }
+ .star-vote li{
+    display: inline-block;
+ }
+
+.star-vote-intro{
+    position: absolute;
+    top: 0;
+    left: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0;
+    /* color:red; */
+}
+
+.star-vote-intro li{
+    /* background-color: orange; */
+    color:orange;
+}
+
+
+

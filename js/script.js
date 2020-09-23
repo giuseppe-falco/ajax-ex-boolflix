@@ -14,72 +14,203 @@
 // Voto
 
 $(document).ready(function() {
-
-
-    var source = $("#film-template").html();
-    var template = Handlebars.compile(source);
-
-
-
+    //parte ricerca e stampa in pagina al click sulll botton cerca
     $("#search-button").click(function(){
-        searchFilm();
+        searchFilm($("#search-input").val());
     }   );
-
-    $("#search-input").keydown(function(e) {
+    //parte ricerca e stampa in pagina al tasto invio sul campo input
+    $("#search-input").keyup(function(e) {
         if (e.which == 13 && $("#search-input").val() != "") {
-            searchFilm();
+        searchFilm($("#search-input").val());
         }
     });
 
+    //////////////////////////temporaneo////////////////
+    searchFilm("ritorno al futuro")
 
-    function searchFilm() {
+    //////////////////////////temporaneo////////////////
 
-        var search = $("#search-input").val();
     
-        $(".wrapper").empty();
-
-
-        $.ajax(
-            {
-                url: "https://api.themoviedb.org/3/search/movie?api_key=3144ac047c40b3615df0fe245035ca70",
-                method: "GET",
-                "data": {
-                "query": search,
-                "language": "it",               
-                    
-                } ,
-                success: function (data) {
-                    var results = data.results;
-                    for (var i=0; i<20; i++){
-                                
-                        var context = {
-                            "title":results[i].title,
-                            "originalTitle":results[i].original_title,
-                            "language":results[i].original_language,
-                            "popularity":results[i].popularity,
-                            "vote":results[i].vote_count,
-                        }
-                        
-                        var html = template(context);
-                        $(".wrapper").append(html);
-                    }
-                },
-                error: function(error) {
-                    alert("Errore")
-                }
-            });
-
-
-    }
-
-
-
-
-
-
-
-
 })
+
+
+
+
+
+
+
+
+
+
+
+//******************************************funczioni*************************************+ */
+    //funzione ricerca film
+    function searchFilm(input) {
+        clear()
+    
+        if(input != " " && input != "  ") {
+            $.ajax(
+                {
+                    url: "https://api.themoviedb.org/3/search/movie",
+                    method: "GET",
+                    "data": {
+                    "api_key":"3144ac047c40b3615df0fe245035ca70",
+                    "query": input,
+                    "language": "it",               
+                        
+                    } ,
+                    success: function (data) {
+                        render (data.results, $(".wrapper"));
+                    },
+                    error: function(error) {
+                        alert("Errore")
+                    }
+                });
+            }
+
+
+
+    };
+
+    //funzione che stampa in pagina 
+    function render(results, destination) {
+
+        var source = $("#film-template").html();
+        var template = Handlebars.compile(source);
+
+        // var obj = [];
+
+        for (var i=0; i<results.length; i++){
+            
+            var vote = (results[i].vote_average / 2).toFixed(2);
+
+            var context = {
+                "title":results[i].title,
+                "originalTitle":results[i].original_title,
+                "language":results[i].original_language,
+                "vote": vote,
+                "voteNumber":results[i].vote_count,
+            };
+            
+            
+                         
+            var html = template(context);
+            destination.append(html);
+
+                       
+            // total number of stars
+            const starTotal = 5;
+            console.log(vote);
+
+            const starPercentageRounded = (((vote / starTotal) * 100) + "%");
+            console.log(starPercentageRounded);
+
+            
+            // console.lo   g(i);
+            // for(var h=0; h<vote; h++) {  
+                // document.querySelector(".star-vote-intro").style.width = starPercentageRounded; 
+            // }
+
+            // $(".star-vote-intro").each(function()
+            // {
+            //     console.log(starPercentageRounded);
+                
+            //     console.log(this);
+            //     this.style.width = starPercentageRounded;
+            //     console.log(this);
+            //     // this.css("width",starPercentageRounded);
+            // });
+
+            document.getElementsByClassName("star-vote-intro")[i].style.width = starPercentageRounded;
+            
+            
+            // console.log(vote);
+
+            // switch (vote) {
+            //     case 0:
+            //         console.log("0 stelle");
+            //         for (var j=0; j<5; j++){
+            //             $(".star-vote").prepend("<li><i class='far fa-star'></i></li>")
+                        
+            //         }
+            //         break;
+            //     case 1:
+            //         console.log("1 stelle");
+            //         for (var j=0; j<1; j++){
+            //             $(".star-vote").prepend("<li><i class='fas fa-star'></i></li>")
+            //             console.log("pre");
+            //         }
+            //         for (var j=0; j<4; j++){
+            //             $(".star-vote").append("<li><i class='far fa-star'></i></li>")
+            //             console.log("appe");
+            //         }
+            //         break;
+            //     case 2:
+            //         console.log("2 stelle");
+            //         for (var j=0; j<2; j++){
+            //             $(".star-vote").prepend("<li><i class='fas fa-star'></i></li>")
+            //         }
+            //         for (var j=0; j<3; j++){
+            //             $(".star-vote").append("<li><i class='far fa-star'></i></li>")
+            //         }
+            //         break;
+            //     case 3:
+            //         console.log("3 stelle");
+            //         for (var j=0; j<3; j++){
+            //             $(".star-vote").prepend("<li><i class='fas fa-star'></i></li>")
+            //         }
+            //         for (var j=0; j<2; j++){
+            //             $(".star-vote").append("<li><i class='far fa-star'></i></li>")
+            //         }
+            //         break;
+            //     case 4:
+            //         console.log("4 stelle");
+            //         for (var j=0; j<4; j++){
+            //             $(".star-vote").prepend("<li><i class='fas fa-star'></i></li>")
+            //         }
+            //         for (var j=0; j<1; j++){
+            //             $(".star-vote").append("<li><i class='far fa-star'></i></li>")
+            //         }
+            //         var test = "4 stelle";
+            //         break;
+            //     case 5:
+            //         console.log("5 stelle");
+            //         for (var j=0; j<5; j++){
+            //             // $(".star-vote").prepend("<li><i class='fas fa-star'></i></li>")
+            //             var test = "<li><i class='fas fa-star'></i></li>";
+            //             console.log('ciao');
+                        
+            //         }
+                   
+            //         break;
+            //     default:
+            //         console.log('default');
+            //         break;
+                    
+          
+          
+        };
+
+        
+      
+
+
+    };
+
+    //funzione che pulisci campo input e html
+    function clear() {
+
+        $(".wrapper").empty();
+        $("#search-input").val("");
+
+    } 
+
+
+
+
+
+
+
 
 
 
