@@ -14,7 +14,10 @@
     // Arrotondiamo sempre per eccesso all’unità successiva, non gestiamo icone mezze piene (o mezze vuote :P)
     // Trasformiamo poi la stringa statica della lingua in una vera e propria bandiera della nazione corrispondente, gestendo il caso in cui non abbiamo la bandiera della nazione ritornata dall’API (le flag non ci sono in FontAwesome).
     // Allarghiamo poi la ricerca anche alle serie tv. Con la stessa azione di ricerca dovremo prendere sia i film che corrispondono alla query, sia le serie tv, stando attenti ad avere alla fine dei valori simili (le serie e i film hanno campi nel JSON di risposta diversi, simili ma non sempre identici)
-    // Qui un esempio di chiamata per le serie tv:
+//Milestone 3
+    //aggiungiamo la copertina del film o della serie al nostro elenco.
+    //Ci viene passata dall’API solo la parte finale dell’URL, questo perché poi potremo generare da quella porzione di URL tante dimensioni diverse.
+    //Dovremo prendere quindi l’URL base delle immagini di TMDB: https://image.tmdb.org/t/p/ per poi aggiungere la dimensione che vogliamo generare (troviamo tutte le dimensioni possibili a questo link: https://www.themoviedb.org/talk/53c11d4ec3a3684cf4006400) per poi aggiungere la parte finale dell’URL passata dall’API.
 
 $(document).ready(function() {
     //parte ricerca e stampa in pagina al click sulll botton cerca
@@ -31,7 +34,7 @@ $(document).ready(function() {
     });
 
     //////////////////////////temporaneo////////////////
-    searchFilm("ritorno al passato")
+    searchFilm("ritorno al futuro")
 
     //////////////////////////temporaneo////////////////
     
@@ -81,8 +84,9 @@ $(document).ready(function() {
                     "language": "it",               
                     } ,
                     success: function (data) {
-                        var element = "fiml";
-                        checkResultsEmpty(data, element)                    },
+                        var type = "film";
+                        checkResultsEmpty(type, data)
+                    },
                     error: function(error) {
                         alert("Errore")
                     }
@@ -105,8 +109,8 @@ $(document).ready(function() {
                     "language": "it",               
                     } ,
                     success: function (data) {
-                        var element = "episodio";
-                        checkResultsEmpty(data, element)
+                        var type = "show";
+                        checkResultsEmpty(type, data)
                     },
                     error: function(error) {
                         alert("Errore")
@@ -116,15 +120,15 @@ $(document).ready(function() {
     };
 
     //controllo esistano dei risultati
-    function checkResultsEmpty(data, element) {
+    function checkResultsEmpty(type, data) {
         if (data.total_results == 0) {
-            alert("Nessun "+ element + " trovato per questa ricerca")
+            alert("Nessun "+ type + " trovato per questa ricerca")
         } else {
-            render (data.results, $(".wrapper"));
+            render (type, data.results);
         }
     }
     //funzione che stampa in pagina 
-    function render(results, destination) {
+    function render(type, results) {
         //copia template film 
         var source = $("#film-template").html();
         var template = Handlebars.compile(source);
@@ -134,16 +138,22 @@ $(document).ready(function() {
             var vote = (results[i].vote_average / 2).toFixed(2);
 
             var context = {
-                "title":results[i].title,
-                "originalTitle":results[i].original_title,
+                "title":results[i].title || results[i].name,
+                "originalTitle":results[i].original_title || results[i].original_name,
 
-                "name": results[i].name,
-                "originalName":results[i].original_name,
                 "language":results[i].original_language,
                 "vote": vote,
                 "voteNumber":results[i].vote_count,
+                "type":type,
+
+                "path":results[i].poster_path,
             };
             
+            if (type == "film") {
+                var destination = $("#list-film");
+            }else if (type = "show") {
+                var destination = $("#list-show");
+            }
             //appendo in pagina la lista dei film trovati
             var html = template(context);
             destination.append(html);
@@ -156,6 +166,18 @@ $(document).ready(function() {
             document.getElementsByClassName("star-vote-intro")[i].style.width = starPercentageRounded;
             
                      
+            //soluzione di samuele
+            // var num = vote;
+            // var string = "";
+            // for(var i=0;i<5;i++){
+            //     if (i<=num){
+            //         string = string = "<i class='fas fa-star'></i>";
+            //     } else {
+            //         string = string = "<i class='far fa-star'></i>";
+            //     }
+            //     console.log(string);
+                
+            // }
         };    
       
     };
@@ -163,7 +185,8 @@ $(document).ready(function() {
     //funzione che pulisci campo input e html
     function clear() {
         // svuota pagina film
-        $(".wrapper").empty();
+        $("#list-show").empty();
+        $("#list-film").empty();
         // svuota cmapo input
         $("#search-input").val("");
 
@@ -171,7 +194,7 @@ $(document).ready(function() {
 
 
 
-
+    //funzione che fa partire la ricerca
     function startSearch(input){
 
         var option = $("#select-search").val();

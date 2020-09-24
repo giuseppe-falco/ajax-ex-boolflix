@@ -12,6 +12,7 @@
 </head>
 <body>
     <div class="container">
+      <div class="search-box">
         <input id="search-input" type="text">
         <select name="select-search" id="select-search">
           <option value="search-film">Ricerca film</option>
@@ -19,34 +20,50 @@
           <option value="search-global">Ricerca globale</option>
         </select>
         <button id="search-button">Cerca</button>
-        <div class="wrapper">
+      </div>
+        <div id="wrapper">
+          <h2>Film</h2>
+          <div id="list-film">
+          </div>
+          <h2>Show</h2>
+          <div id="list-show">
+          </div>
         </div>
     </div>
     <script id="film-template" type="text/x-handlebars-template">
       <div class="film">
-        <h2>Titolo: {{title}}{{name}}</h2>
-        <h2>Titolo originale: {{originalTitle}}{{originalName}}</h2>
-        <p>Lingua originale: {{language}}
-          <div class="img-results-container">
-            <img class="img-results" src="svg/{{language}}.svg" alt="">
-        </p>
-        <p>Voto medio {{vote}}/5
-          <ul class="star-vote">
-            <li><i class="far fa-star"></i></li>
-            <li><i class="far fa-star"></i></li>
-            <li><i class="far fa-star"></i></li>
-            <li><i class="far fa-star"></i></li>
-            <li><i class="far fa-star"></i></li>
-            <ul class="star-vote-intro">
-              <li><i class="fas fa-star"></i></li>
-              <li><i class="fas fa-star"></i></li>
-              <li><i class="fas fa-star"></i></li>
-              <li><i class="fas fa-star"></i></li>
-              <li><i class="fas fa-star"></i></li>
-            </ul>
-          </ul>
-        </p>
-        <p>{{voteNumber}} persone hanno votato</p>
+        <div class="img-poster">
+          <img src="https://image.tmdb.org/t/p/w500/{{path}}" alt="">
+        </div>
+        <div class="block-result">
+          <div class="title-result">
+            <h2>Titolo: {{title}}</h2>
+            <h2>Titolo originale: {{originalTitle}}</h2>
+          </div>
+          <div class="vote-result">
+            <div class="img-results-container">
+              <p>Lingua originale: {{language}}</p>
+              <img class="img-results" src="svg/{{language}}.svg" alt="">
+            </div>
+            <p>Voto medio {{vote}}/5
+              <ul class="star-vote">
+                <li><i class="far fa-star"></i></li>
+                <li><i class="far fa-star"></i></li>
+                <li><i class="far fa-star"></i></li>
+                <li><i class="far fa-star"></i></li>
+                <li><i class="far fa-star"></i></li>
+                <ul class="star-vote-intro">
+                  <li><i class="fas fa-star"></i></li>
+                  <li><i class="fas fa-star"></i></li>
+                  <li><i class="fas fa-star"></i></li>
+                  <li><i class="fas fa-star"></i></li>
+                  <li><i class="fas fa-star"></i></li>
+                </ul>
+              </ul>
+            </p>
+            <p>{{voteNumber}} persone hanno votato</p>
+          </div>
+        </div>
       </div>
     </script>
     <script src="js/script.js"></script>

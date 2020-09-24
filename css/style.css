@@ -39,9 +39,43 @@
 }
 
 .img-results-container{
-    display: inline-block;
+    display: flex;
 }
 
 .img-results{
     width: 30px;
+    margin-left: 20px;
+}
+
+.film{
+    width: 80%;
+    border:3px solid #000;
+    margin: 20px 0;
+    height: 300px;
+    background-color: lightblue;
+}
+
+.img-poster img{
+    height: 294px;
+    width: 200px;
+}
+.img-poster{
+    margin-right:20px;
+}
+
+.film{
+    display: flex;
+    align-items: flex-start
+}
+
+.block-result{
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.vote-result{
+    /* justify-content: flex-end; */
+    justify-self: flex-end;
 }
