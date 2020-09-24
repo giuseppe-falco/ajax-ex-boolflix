@@ -63,11 +63,10 @@ $(document).ready(function() {
                     "api_key":"3144ac047c40b3615df0fe245035ca70",
                     "query": input,
                     "language": "it",               
-                        
                     } ,
                     success: function (data) {
-                        render (data.results, $(".wrapper"));
-                    },
+                        var element = "fiml";
+                        checkResultsEmpty(data, element)                    },
                     error: function(error) {
                         alert("Errore")
                     }
@@ -88,10 +87,10 @@ $(document).ready(function() {
                     "api_key":"3144ac047c40b3615df0fe245035ca70",
                     "query": input,
                     "language": "it",               
-                        
                     } ,
                     success: function (data) {
-                        render (data.results, $(".wrapper"));
+                        var element = "episodio";
+                        checkResultsEmpty(data, element)
                     },
                     error: function(error) {
                         alert("Errore")
@@ -100,6 +99,14 @@ $(document).ready(function() {
             }
     };
 
+    //controllo esistano dei risultati
+    function checkResultsEmpty(data, element) {
+        if (data.total_results == 0) {
+            alert("Nessun "+ element + " trovato per questa ricerca")
+        } else {
+            render (data.results, $(".wrapper"));
+        }
+    }
     //funzione che stampa in pagina 
     function render(results, destination) {
         //copia template film 
@@ -121,8 +128,7 @@ $(document).ready(function() {
                 "voteNumber":results[i].vote_count,
             };
             
-            
-            //sppendo in pagina la lista dei film trovati
+            //appendo in pagina la lista dei film trovati
             var html = template(context);
             destination.append(html);
 
