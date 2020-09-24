@@ -20,15 +20,13 @@ $(document).ready(function() {
     //parte ricerca e stampa in pagina al click sulll botton cerca
     $("#search-button").click(function(){
         var input = $("#search-input").val(); 
-        searchFilm(input);
-        searchShow(input);
+        startSearch(input);
     }   );
     //parte ricerca e stampa in pagina al tasto invio sul campo input
     $("#search-input").keyup(function(e) {
         if (e.which == 13 && $("#search-input").val() != "") {
             var input = $("#search-input").val(); 
-            searchFilm(input);
-            searchShow(input);
+            startSearch(input);
         }
     });
 
@@ -37,6 +35,24 @@ $(document).ready(function() {
 
     //////////////////////////temporaneo////////////////
     
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 })
 
 
@@ -156,7 +172,26 @@ $(document).ready(function() {
 
 
 
+    function startSearch(input){
 
+        var option = $("#select-search").val();
+        console.log(option);
+
+        switch (option) {
+            case "search-film":
+                searchFilm(input);
+                break;
+            case "search-show":
+                searchShow(input);
+                break;
+            case "search-global":
+                searchFilm(input);
+                searchShow(input);
+                break; 
+        
+        }
+    }
+    
 
 
 
