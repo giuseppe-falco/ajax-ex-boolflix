@@ -137,6 +137,13 @@ $(document).ready(function() {
             //calcolo voto medio in scala 5
             var vote = (results[i].vote_average / 2).toFixed(2);
 
+            //var percorso immagine
+            var path = results[i].poster_path;
+            //se il percorso è nullo assegno percorso = immagine film bud spencer            
+            if (path == null ){
+                path = "27bKMOKfVtOicxZPP1Nk78WyCFE.jpg";
+            }
+
             var context = {
                 "title":results[i].title || results[i].name,
                 "originalTitle":results[i].original_title || results[i].original_name,
@@ -146,9 +153,10 @@ $(document).ready(function() {
                 "voteNumber":results[i].vote_count,
                 "type":type,
 
-                "path":results[i].poster_path,
+                "path":path,
             };
-            
+
+            //appendo in sezioni diverse film e serie
             if (type == "film") {
                 var destination = $("#list-film");
             }else if (type = "show") {
