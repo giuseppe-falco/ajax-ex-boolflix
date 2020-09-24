@@ -1,71 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css'>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/flag-icon.css">
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js'></script>
-    <title>Boolflix</title>
-</head>
-<body>
-    <div class="container">
-      <div class="search-box">
-        <input id="search-input" type="text">
-        <select name="select-search" id="select-search">
-          <option value="search-film">Ricerca film</option>
-          <option value="search-show">Ricerca show</option>
-          <option value="search-global">Ricerca globale</option>
-        </select>
-        <button id="search-button">Cerca</button>
-      </div>
-        <div id="wrapper">
-          <h2>Film</h2>
-          <div id="list-film">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css'>
+      <link rel="stylesheet" href="css/style.css">
+      <link rel="stylesheet" href="css/flag-icon.css">
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js'></script>
+      <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+      <title>Boolflix</title>
+  </head>
+  <body>
+      <div class="container">
+        <header>
+          <div class="logo-header">
+            <img src="img/logo.png" alt="">
           </div>
-          <h2>Show</h2>
-          <div id="list-show">
+          <div class="search-header">
+            <input id="search-input" type="text">
+            <select name="select-search" id="select-search">
+              <option value="search-film">Ricerca film</option>
+              <option value="search-show">Ricerca show</option>
+              <option value="search-global">Ricerca globale</option>
+            </select>
           </div>
-        </div>
-    </div>
-    <script id="film-template" type="text/x-handlebars-template">
-      <div class="film">
-        <div class="img-poster">
-          <img class="poster-img" src="https://image.tmdb.org/t/p/w500/{{path}}" alt="">
-        </div>
-        <div class="block-result">
-          <div class="title-result">
-            <h2>Titolo: {{title}}</h2>
-            <h2>Titolo originale: {{originalTitle}}</h2>
-          </div>
-          <div class="vote-result">
-            <div class="img-results-container">
-              <p>Lingua originale: {{language}}</p>
-              <img class="img-results" src="svg/{{language}}.svg" alt="">
+          <button id="search-button">Cerca</button>
+        </header>
+          <div id="wrapper">
+            <h2>Film</h2>
+            <div id="list-film" class="clearfix">
             </div>
-            <p>Voto medio {{vote}}/5
-              <ul class="star-vote">
-                <li><i class="far fa-star"></i></li>
-                <li><i class="far fa-star"></i></li>
-                <li><i class="far fa-star"></i></li>
-                <li><i class="far fa-star"></i></li>
-                <li><i class="far fa-star"></i></li>
-                <ul class="star-vote-intro">
-                  <li><i class="fas fa-star"></i></li>
-                  <li><i class="fas fa-star"></i></li>
-                  <li><i class="fas fa-star"></i></li>
-                  <li><i class="fas fa-star"></i></li>
-                  <li><i class="fas fa-star"></i></li>
-                </ul>
-              </ul>
-            </p>
-            <p>{{voteNumber}} persone hanno votato</p>
+            <h2>Show</h2>
+            <div id ="list-show" class="clearfix">
+            </div>
+          </div>
+      </div>
+      <script id="film-template" type="text/x-handlebars-template">
+        <div class="search-result">
+          <div class="img-poster hvr-sweep-to-top ">
+            <img class="poster-img" src="https://image.tmdb.org/t/p/w342/{{path}}" alt="">
+            <div class="block-result">
+              <div class="title-result">
+                <h2>Titolo: <span>{{title}}</span></h2>
+                <h2>Titolo originale: <span>{{originalTitle}}</span></h2>
+              </div>
+              <div class="vote-result">
+                <div class="img-flag-container">
+                  <p>Lingua originale: {{language}}</p>
+                  <img class="img-flag" src="svg/{{language}}.svg" alt="">
+                </div>
+                <p>Voto medio {{vote}}/5
+                  <ul class="star-vote">
+                    <li><i class="far fa-star"></i></li>
+                    <li><i class="far fa-star"></i></li>
+                    <li><i class="far fa-star"></i></li>
+                    <li><i class="far fa-star"></i></li>
+                    <li><i class="far fa-star"></i></li>
+                    <ul class="star-vote-intro">
+                      <li><i class="fas fa-star"></i></li>
+                      <li><i class="fas fa-star"></i></li>
+                      <li><i class="fas fa-star"></i></li>
+                      <li><i class="fas fa-star"></i></li>
+                      <li><i class="fas fa-star"></i></li>
+                    </ul>
+                  </ul>
+                </p>
+                <p>{{voteNumber}} persone hanno votato</p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </script>
-    <script src="js/script.js"></script>
-</body>
+      </script>
+      <script src="js/script.js"></script>
+  </body>
 </html>
