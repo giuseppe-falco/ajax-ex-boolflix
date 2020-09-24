@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css'>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/flag-icon.css">
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js'></script>
     <title>Boolflix</title>
@@ -12,15 +13,18 @@
 <body>
     <div class="container">
         <input id="search-input" type="text">
-        <button id="search-button">Cerca</button>
+        <button id="search-button">Ricerca globale</button>
         <div class="wrapper">
         </div>
     </div>
     <script id="film-template" type="text/x-handlebars-template">
       <div class="film">
-        <h2>Titolo: {{title}}</h2>
-        <h2>Titolo originale: {{originalTitle}}</h2>
-        <p>Lingua originale: {{language}}</p>
+        <h2>Titolo: {{title}}{{name}}</h2>
+        <h2>Titolo originale: {{originalTitle}}{{originalName}}</h2>
+        <p>Lingua originale: {{language}}
+          <div class="img-results-container">
+            <img class="img-results" src="svg/{{language}}.svg">
+        </p>
         <p>Voto medio {{vote}}/5
           <ul class="star-vote">
             <li><i class="far fa-star"></i></li>

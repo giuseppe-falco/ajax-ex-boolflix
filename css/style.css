@@ -1,5 +1,5 @@
- 	* { 
-     margin: 0;
+* { 
+    margin: 0;
     padding: 0;
     box-sizing:border-box;
  }	
@@ -13,13 +13,13 @@
     margin:10px 0;
 
     position: relative;
-    width: 125px;
+    width: 112px;
      
  }
 
  .fa-star{
-     font-size: 16px;
-     margin:0 1px;
+    font-size: 16px;
+    margin:0px;
  }
  .star-vote li{
     display: inline-block;
@@ -32,13 +32,16 @@
     white-space: nowrap;
     overflow: hidden;
     width: 0;
-    /* color:red; */
 }
 
 .star-vote-intro li{
-    /* background-color: orange; */
     color:orange;
 }
 
+.img-results-container{
+    display: inline-block;
+}
 
-
+.img-results{
+    width: 30px;
+}

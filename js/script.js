@@ -15,17 +15,20 @@
     // Trasformiamo poi la stringa statica della lingua in una vera e propria bandiera della nazione corrispondente, gestendo il caso in cui non abbiamo la bandiera della nazione ritornata dall’API (le flag non ci sono in FontAwesome).
     // Allarghiamo poi la ricerca anche alle serie tv. Con la stessa azione di ricerca dovremo prendere sia i film che corrispondono alla query, sia le serie tv, stando attenti ad avere alla fine dei valori simili (le serie e i film hanno campi nel JSON di risposta diversi, simili ma non sempre identici)
     // Qui un esempio di chiamata per le serie tv:
-    // https://api.themoviedb.org/3/search/tv?api_key=e99307154c6dfb0b4750f6603256716d&language=it_IT&query=scrubs
 
 $(document).ready(function() {
     //parte ricerca e stampa in pagina al click sulll botton cerca
     $("#search-button").click(function(){
-        searchFilm($("#search-input").val());
+        var input = $("#search-input").val(); 
+        searchFilm(input);
+        searchShow(input);
     }   );
     //parte ricerca e stampa in pagina al tasto invio sul campo input
     $("#search-input").keyup(function(e) {
         if (e.which == 13 && $("#search-input").val() != "") {
-        searchFilm($("#search-input").val());
+            var input = $("#search-input").val(); 
+            searchFilm(input);
+            searchShow(input);
         }
     });
 
@@ -33,7 +36,6 @@ $(document).ready(function() {
     searchFilm("ritorno al passato")
 
     //////////////////////////temporaneo////////////////
-
     
 })
 
@@ -50,8 +52,8 @@ $(document).ready(function() {
 //******************************************funczioni*************************************+ */
     //funzione ricerca film
     function searchFilm(input) {
-        clear()
-    
+        clear();
+        // controllo input non sia vuoto
         if(input != " " && input != "  ") {
             $.ajax(
                 {
@@ -71,41 +73,64 @@ $(document).ready(function() {
                     }
                 });
             }
+    };
 
-
-
+    //funzione ricerca serie tv
+    function searchShow (input) {
+        clear();
+        // controllo input non sia vuoto
+        if(input != " " && input != "  ") {
+            $.ajax(
+                {
+                    url: "https://api.themoviedb.org/3/search/tv",
+                    method: "GET",
+                    "data": {
+                    "api_key":"3144ac047c40b3615df0fe245035ca70",
+                    "query": input,
+                    "language": "it",               
+                        
+                    } ,
+                    success: function (data) {
+                        render (data.results, $(".wrapper"));
+                    },
+                    error: function(error) {
+                        alert("Errore")
+                    }
+                });
+            }
     };
 
     //funzione che stampa in pagina 
     function render(results, destination) {
-
+        //copia template film 
         var source = $("#film-template").html();
         var template = Handlebars.compile(source);
 
-        // var obj = [];
-
         for (var i=0; i<results.length; i++){
-            
+            //calcolo voto medio in scala 5
             var vote = (results[i].vote_average / 2).toFixed(2);
 
             var context = {
                 "title":results[i].title,
                 "originalTitle":results[i].original_title,
+
+                "name": results[i].name,
+                "originalName":results[i].original_name,
                 "language":results[i].original_language,
                 "vote": vote,
                 "voteNumber":results[i].vote_count,
             };
             
             
-                         
+            //sppendo in pagina la lista dei film trovati
             var html = template(context);
             destination.append(html);
 
-                       
+            //totale stelle
             const starTotal = 5;
+            //percentuale valore voto
             const starPercentageRounded = (((vote / starTotal) * 100) + "%");
-
-            
+            //colora stelle in percentuale al voto            
             document.getElementsByClassName("star-vote-intro")[i].style.width = starPercentageRounded;
             
                      
@@ -115,8 +140,9 @@ $(document).ready(function() {
 
     //funzione che pulisci campo input e html
     function clear() {
-
+        // svuota pagina film
         $(".wrapper").empty();
+        // svuota cmapo input
         $("#search-input").val("");
 
     } 
