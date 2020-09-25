@@ -255,3 +255,11 @@ img.img-flag-container{
     -webkit-transform: scaleY(1);
     transform: scaleY(1);
   }
+
+.no-result{
+    color:#fff;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 25px;
+    font-weight: bold;
+}

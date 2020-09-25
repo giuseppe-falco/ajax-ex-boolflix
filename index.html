@@ -39,7 +39,7 @@
       <script id="film-template" type="text/x-handlebars-template">
         <div class="search-result">
           <div class="img-poster hvr-sweep-to-top ">
-            <img class="poster-img" src="https://image.tmdb.org/t/p/w342/{{path}}" alt="">
+            <img class="poster-img" src="{{path}}" alt="">
             <div class="block-result">
               <div class="title-result">
                 <h2>Titolo: <span>{{title}}</span></h2>
@@ -70,6 +70,11 @@
               </div>
             </div>
           </div>
+        </div>
+      </script>
+      <script id="no-result-template" type="text/x-handlebars-template">
+        <div class="no-result">
+          <p>La ricerca non ha prodotto risultati!</p>
         </div>
       </script>
       <script src="js/script.js"></script>

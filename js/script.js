@@ -23,6 +23,12 @@
     //Un header che contiene logo e search bar
     //Dopo aver ricercato qualcosa nella searchbar, i risultati appaiono sotto forma di “card” in cui lo sfondo è rappresentato dall’immagine di copertina (consiglio la poster_path con w342)
     //Andando con il mouse sopra una card (on hover), appaiono le informazioni aggiuntive già prese nei punti precedenti più la overview
+// Milestone 5 (Opzionale):
+    // Partendo da un film o da una serie, richiedere all'API quali sono gli attori che fanno parte del cast aggiungendo alla nostra scheda Film / Serie SOLO i primi 5 restituiti dall’API con Nome e Cognome, e i generi associati al film con questo schema: “Genere 1, Genere 2, …”.
+// Milestone 6 (Opzionale):
+    // Creare una lista di generi richiedendo quelli disponibili all'API e creare dei filtri con i generi tv e movie per mostrare/nascondere le schede ottenute con la ricerca.
+
+
 
     $(document).ready(function() {
     //parte ricerca e stampa in pagina al click sulll botton cerca
@@ -39,7 +45,7 @@
     });
 
     //////////////////////////temporaneo////////////////
-    searchFilm("ritorno al futuro")
+    getResults("movie","ritorno al futuro")
 
     //////////////////////////temporaneo////////////////
     
@@ -47,15 +53,6 @@
     $(".logo-header").click(function(){
         startSearch(" ");
       }); 
-
-
-
-
-
-
-
-
-
 
 
 
@@ -75,14 +72,14 @@
 
 
 //******************************************funczioni*************************************+ */
-    //funzione ricerca film
-    function searchFilm(input) {
+    //funzione ricerca 
+    function getResults(type, input) {
         clear();
         // controllo input non sia vuoto
         if(input != " " && input != "  ") {
             $.ajax(
                 {
-                    url: "https://api.themoviedb.org/3/search/movie",
+                    url: "https://api.themoviedb.org/3/search/" + type,
                     method: "GET",
                     "data": {
                     "api_key":"3144ac047c40b3615df0fe245035ca70",
@@ -90,32 +87,6 @@
                     "language": "it",               
                     } ,
                     success: function (data) {
-                        var type = "film";
-                        checkResultsEmpty(type, data)
-                    },
-                    error: function(error) {
-                        alert("Errore")
-                    }
-                });
-            }
-    };
-
-    //funzione ricerca serie tv
-    function searchShow (input) {
-        clear();
-        // controllo input non sia vuoto
-        if(input != " " && input != "  ") {
-            $.ajax(
-                {
-                    url: "https://api.themoviedb.org/3/search/tv",
-                    method: "GET",
-                    "data": {
-                    "api_key":"3144ac047c40b3615df0fe245035ca70",
-                    "query": input,
-                    "language": "it",               
-                    } ,
-                    success: function (data) {
-                        var type = "show";
                         checkResultsEmpty(type, data)
                     },
                     error: function(error) {
@@ -128,11 +99,22 @@
     //controllo esistano dei risultati
     function checkResultsEmpty(type, data) {
         if (data.total_results == 0) {
-            alert("Nessun "+ type + " trovato per questa ricerca")
+            var source = $("#no-result-template").html();
+            var template = Handlebars.compile(source);
+        
+            //funzione che definisce percorso in base a film/tv
+            typeIs(type);
+            //appendo in pagina no risultati
+            var html = template();
+            destination.append(html);
+        
+        
+            // alert("Nessun "+ type + " trovato per questa ricerca")
         } else {
             render (type, data.results);
         }
-    }
+    };
+
     //funzione che stampa in pagina 
     function render(type, results) {
         //copia template film 
@@ -144,12 +126,14 @@
             var vote = (results[i].vote_average / 2).toFixed(2);
 
             //var percorso immagine
-            var path = results[i].poster_path;
-            //se il percorso è nullo assegno percorso = immagine film bud spencer            
-            if (path == null ){
-                path = "27bKMOKfVtOicxZPP1Nk78WyCFE.jpg";
+            //se il percorso è nullo restituisce immagine film bud spencer            
+            // var path = results[i].poster_path || "27bKMOKfVtOicxZPP1Nk78WyCFE.jpg";
+            if(results[i].poster_path == null ){
+                var path = "img/no_poster.png";
+            } else {
+                var path = "https://image.tmdb.org/t/p/w342/" + results[i].poster_path;
             }
-
+            
             var context = {
                 "title":results[i].title || results[i].name,
                 "originalTitle":results[i].original_title || results[i].original_name,
@@ -159,43 +143,32 @@
                 "voteNumber":results[i].vote_count,
                 "type":type,
 
-                "path":path,
+                "path": path,
             };
 
-            //appendo in sezioni diverse film e serie
-            if (type == "film") {
-                var destination = $("#list-film");
-            }else if (type = "show") {
-                var destination = $("#list-show");
-            }
-            //appendo in pagina la lista dei film trovati
+            //funzione che definisce destinazione risultati
+            typeIs(type);
+
+            //appendo in pagina la lista dei risultati trovati
             var html = template(context);
             destination.append(html);
+            //aggiunge stelle review 
+            printStar(vote, i);
 
-            //totale stelle
-            const starTotal = 5;
-            //percentuale valore voto
-            const starPercentageRounded = (((vote / starTotal) * 100) + "%");
-            //colora stelle in percentuale al voto            
-            document.getElementsByClassName("star-vote-intro")[i].style.width = starPercentageRounded;
-            
-                     
-            //soluzione di samuele
-            // var num = vote;
-            // var string = "";
-            // for(var i=0;i<5;i++){
-            //     if (i<=num){
-            //         string = string = "<i class='fas fa-star'></i>";
-            //     } else {
-            //         string = string = "<i class='far fa-star'></i>";
-            //     }
-            //     console.log(string);
-                
-            // }
         };    
       
     };
 
+    function printStar(num, i){
+            //totale stelle
+            const starTotal = 5;
+            //percentuale valore voto
+            const starPercentageRounded = (((num / starTotal) * 100) + "%");
+            //colora stelle in percentuale al voto            
+            document.getElementsByClassName("star-vote-intro")[i].style.width = starPercentageRounded;
+            
+                 
+    }
     //funzione che pulisci campo input e html
     function clear() {
         // svuota pagina film
@@ -204,9 +177,16 @@
         // svuota cmapo input
         $("#search-input").val("");
 
-    } 
+    };
 
-
+    function typeIs(type){
+        //appendo in sezioni diverse film e serie
+        if (type == "movie") {
+            return destination = $("#list-film");
+        }else if (type == "tv") {
+            return destination = $("#list-show");
+        }
+    };
 
     //funzione che fa partire la ricerca
     function startSearch(input){
@@ -218,25 +198,27 @@
             case "search-film":
                 $("#wrapper>h2:first-of-type").show();
                 $("#wrapper>h2:last-of-type").hide();
-                searchFilm(input);
+                getResults("movie", input);
+                // searchFilm(input);
                 break;
             case "search-show":
                 $("#wrapper>h2:last-of-type").show();
                 $("#wrapper>h2:first-of-type").hide();
-                searchShow(input);
+                getResults("tv", input);
+                // searchShow(input);
                 break;
             case "search-global":
                 $("#wrapper>h2:first-of-type").show();
                 $("#wrapper>h2:last-of-type").show();
-                searchFilm(input);
-                searchShow(input);
+                getResults("movie", input);
+                getResults("tv", input);
+                // searchFilm(input);
+                // searchShow(input);
                 break; 
         
         }
     }
     
-
-
 
 
 
