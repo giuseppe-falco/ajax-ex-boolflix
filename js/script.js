@@ -35,28 +35,61 @@
     $("#search-button").click(function(){
         var input = $("#search-input").val(); 
         startSearch(input);
+        counterResults = 0;
     }   );
     //parte ricerca e stampa in pagina al tasto invio sul campo input
     $("#search-input").keyup(function(e) {
         if (e.which == 13 && $("#search-input").val() != "") {
             var input = $("#search-input").val(); 
             startSearch(input);
+            counterResults = 0;
         }
     });
 
     //////////////////////////temporaneo////////////////
-    getResults("movie","ritorno al futuro")
-
+    startSearch("rambo")
+    
+    //all'avvio della pagina viene impostata ricerca globale e nascoste le altre voci
+    $("#select-search").val("search-global");
+    // $("#search-input").val("rambo");
+    $(".select-genre").hide();
     //////////////////////////temporaneo////////////////
     
-   
+    //premi sul logo e torna alla homepage
     $(".logo-header").click(function(){
         startSearch(" ");
+        //imposta genere tutti i generi
+        $("#select-genre").val("0")
+    }); 
+    
+    
+    //crea generi scelta
+    chooseGenre("movie");
+    
+
+
+
+    // 
+    $("#select-search").change(function () {
+        switch($(this).val()){
+            case "search-film":
+                chooseGenre("movie");
+                $(".select-genre").show();
+                break;
+
+            case "search-show":
+                chooseGenre("tv");
+                $(".select-genre").show();
+                break;
+            case "search-global":
+                $(".select-genre").hide();
+                break;
+        }
       }); 
 
 
 
-
+      counterResults = 0;
 
 
 })
@@ -85,12 +118,15 @@
                     "api_key":"3144ac047c40b3615df0fe245035ca70",
                     "query": input,
                     "language": "it",               
+                    "include_adult":false,
                     } ,
                     success: function (data) {
-                        checkResultsEmpty(type, data)
+                        checkResultsEmpty(type, data);
+                        $("#title-search").text(input);
+                        
                     },
                     error: function(error) {
-                        alert("Errore")
+                        alert("Errore, controlla la ricerca")
                     }
                 });
             }
@@ -142,33 +178,43 @@
                 "vote": vote,
                 "voteNumber":results[i].vote_count,
                 "type":type,
-
+                "overview": results[i].overview,
                 "path": path,
-            };
 
+                "id":results[i].genre_ids,
+            };
+            
+            
             //funzione che definisce destinazione risultati
             typeIs(type);
 
-            //appendo in pagina la lista dei risultati trovati
-            var html = template(context);
-            destination.append(html);
+            //controllo genere
+            checkGenre(results, i, template, context, destination,);
+
             //aggiunge stelle review 
-            printStar(vote, i);
+            // printStar(vote, i);  
 
         };    
-      
+        
+        //se non ha trovato risultati per il genere richiesto avvvisa che non ci sono risultati
+        if (counterResults == 0){
+            noResultsGenre();
+        }
     };
 
     function printStar(num, i){
             //totale stelle
             const starTotal = 5;
             //percentuale valore voto
-            const starPercentageRounded = (((num / starTotal) * 100) + "%");
-            //colora stelle in percentuale al voto            
-            document.getElementsByClassName("star-vote-intro")[i].style.width = starPercentageRounded;
-            
-                 
-    }
+            var starPercentage = ((num / starTotal) * 100);
+            var starPercentageRounded = starPercentage + "%";
+            if (starPercentage != 0){
+                //colora stelle in percentuale al voto            
+                document.getElementsByClassName("star-vote-intro")[i].style.width = starPercentageRounded;
+            }
+                        
+    };
+
     //funzione che pulisci campo input e html
     function clear() {
         // svuota pagina film
@@ -176,7 +222,7 @@
         $("#list-film").empty();
         // svuota cmapo input
         $("#search-input").val("");
-
+    
     };
 
     function typeIs(type){
@@ -220,9 +266,112 @@
     }
     
 
+    // //funzione scelta generi
+    function chooseGenre(type){
 
+        if (type == "movie") {
+            var endPoint = "movie/list";
+        } else if (type == "tv") {
+            var endPoint = "tv/list";
+        }
+            
+        $.ajax(
+            {
+                url: "https://api.themoviedb.org/3/genre/" + endPoint,
+                method: "GET",
+                "data": {
+                    "api_key":"3144ac047c40b3615df0fe245035ca70",
+                    "language": "it",               
+                } ,
+                success: function (data) {
+                    createGenreSelect($("#select-genre"), data.genres);
+                },
+                error: function(error) {
+                    alert("Errore");
+                }
+            });
+        
+    };
 
+    //funzione crea elenco generi
+    function createGenreSelect(destination, genres) {
+        $("#select-genre").empty();
+        destination.append("<option value='0'>Tutti i generi</option>");
+              
 
-  
-   
+        var source = $("#select-genre-template").html();
+        var template = Handlebars.compile(source);
+
+        for (var i = 0; i < genres.length; i++) {
+       
+            var context ={
+                "id":genres[i].id,
+                "text":genres[i].name,
+            };
+
+            var html = template(context);
+            destination.append(html);
+        };
+      };
  
+
+    function appendToPage(template, context, destination){
+        //appendo in pagina la lista dei risultati trovati
+        var html = template(context);
+        destination.append(html);
+    };
+
+    //funzione controllo generi
+    function checkGenre(results, i, template, context, destination){
+        // svuota pagina film
+        //    $("#list-show").empty();
+        //    $("#list-film").empty();
+
+        var resultsId = results[i].genre_ids;
+        console.log(resultsId);        
+
+        var selectedId = $("#select-genre").val();
+        console.log(selectedId);
+        var print = false;
+
+        //se tipo di ricerca è diverso da globale
+        if ($("#select-search").val() != "search-global"){
+
+            //se si è selezionato "tutti i generi"
+            if(selectedId == 0){
+                print = true;
+                counterResults++;
+            //se il risultato non è un array senza generi
+            } else if(resultsId.length != 0){
+                //per il numero di generi in ogni array stampa 
+                for(var i=0; i<resultsId.length;i++){
+                    if (selectedId == resultsId[i]){
+                        counterResults ++;
+                        console.log("ok");
+                        print = true;
+                    } 
+                }
+               
+            } 
+        //se si è fatta una ricerca globale stampa tutto direttamente    
+        } else {
+            print = true;
+            counterResults++;
+        };
+
+        //se print true allora stampa in pagina il film altrimenti stampa "non ci sono risultati"
+        if (print == true){
+            appendToPage(template, context, destination);
+        } 
+
+        $("#film-result").text(counterResults)
+    }
+
+    function noResultsGenre(){
+            var source = $("#no-result-template").html();
+            var template = Handlebars.compile(source);
+            //appendo in pagina no risultati
+            var html = template();
+            destination.append(html);
+    }
+

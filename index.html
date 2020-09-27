@@ -5,7 +5,6 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css'>
       <link rel="stylesheet" href="css/style.css">
-      <link rel="stylesheet" href="css/flag-icon.css">
       <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
       <script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js'></script>
       <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
@@ -14,9 +13,11 @@
   <body>
       <div class="container">
         <header>
+          <!-- logo -->
           <div class="logo-header">
             <img src="img/logo.png" alt="">
           </div>
+          <!-- sezione ricerca -->
           <div class="search-header">
             <input id="search-input" type="text">
             <select name="select-search" id="select-search">
@@ -25,30 +26,45 @@
               <option value="search-global">Ricerca globale</option>
             </select>
           </div>
+          <!-- sezione scelta generi -->
+          <div class="select-genre">
+            <label for="select-genre">Scegli genere</label>
+            <select name="select-genre" id="select-genre" class="">
+              <option value="0">Tutti i generi</option>
+            </select>
+           </div>
+          <!-- bottone per la ricerca -->
           <button id="search-button">Cerca</button>
         </header>
-          <div id="wrapper">
-            <h2>Film</h2>
-            <div id="list-film" class="clearfix">
-            </div>
-            <h2>Show</h2>
-            <div id ="list-show" class="clearfix">
-            </div>
+        <div class="result-show">
+          <p>Risultati per <span id="title-search"></span> </p>
+          <p>Risultati: <span id="film-result"></span></p>
+        </div>
+        <div id="wrapper">
+          <h2>Film</h2>
+          <div id="list-film" class="clearfix">
           </div>
+          <h2>Show</h2>
+          <div id ="list-show" class="clearfix">
+          </div>
+        </div>
       </div>
+      <!-- template elemento trovato -->
       <script id="film-template" type="text/x-handlebars-template">
         <div class="search-result">
           <div class="img-poster hvr-sweep-to-top ">
-            <img class="poster-img" src="{{path}}" alt="">
+            <img class="poster-img" src="{{path}}" alt="immagine copertina">
             <div class="block-result">
               <div class="title-result">
                 <h2>Titolo: <span>{{title}}</span></h2>
                 <h2>Titolo originale: <span>{{originalTitle}}</span></h2>
+                <p>Descrizione: {{overview}}</p>
+                <span>{{id}}</span>
               </div>
               <div class="vote-result">
                 <div class="img-flag-container">
                   <p>Lingua originale: {{language}}</p>
-                  <img class="img-flag" src="svg/{{language}}.svg" alt="">
+                  <img class="img-flag" src="svg/{{language}}.svg" alt=" ">
                 </div>
                 <p>Voto medio {{vote}}/5
                   <ul class="star-vote">
@@ -72,10 +88,15 @@
           </div>
         </div>
       </script>
+      <!-- template ricerca non ha prodotto risultati -->
       <script id="no-result-template" type="text/x-handlebars-template">
         <div class="no-result">
           <p>La ricerca non ha prodotto risultati!</p>
         </div>
+      </script>
+      <!-- template scelta generi -->
+      <script id="select-genre-template" type="text/x-handlebars-template">
+        <option value="{{id}}">{{text}} {{id}}</ption>
       </script>
       <script src="js/script.js"></script>
   </body>

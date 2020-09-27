@@ -19,7 +19,6 @@
     background-size: cover;
     
     font-family: sans-serif;
-
 }
 
 .clearfix::after {
@@ -35,13 +34,18 @@ header{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom:30px;
 }
 
 .logo-header img{
     opacity: 1;
     width: 300px;
     margin-left: 50px;
+}
+
+#search-input{
+    border: none;
+    padding:5px 10px ;
+    border-radius: 8px;
 }
 
 #select-search{
@@ -61,6 +65,18 @@ header{
     padding:10px 20px;
     border-radius: 10px;
 }
+/* select genre */
+.select-genre{
+    color:#fff;
+}
+
+#select-genre{
+    border: none;
+    text-transform: uppercase;
+    padding:5px 10px ;
+    border-radius: 8px;
+}
+
 /* /header */
 /* wrapper */
 .wrapper-header{
@@ -85,6 +101,29 @@ header{
     text-align: center;
     font-family: sans-serif;
 }
+
+.result-show{
+    width: 80%;
+    margin: 10px auto;
+    padding: 20px 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 20px;
+    padding: 20px 20px;
+    color:grey;
+    font-size: x-large;
+    display: flex;
+    justify-content: space-between;
+}
+
+#title-search{
+    text-transform: capitalize;
+    color:#fff;
+}
+
+#film-result{
+    color:#fff;
+}
+
 #list-all, #list-film, #list-show{
     width: 90%;
     margin: auto;
@@ -145,6 +184,8 @@ header{
 .title-result{
     margin-top: 10px;
     font-size: 16px;
+    text-align: left;
+    height: 300px;
 }
 
 .title-result h2{
@@ -155,6 +196,13 @@ header{
 .title-result span{
     font-weight: 600;
     color:#fff;
+}
+
+.title-result p{
+    margin-top: 20px;
+    overflow-y: auto;
+    height: 200px;
+    scrollbar-width: none;
 }
 
 /* sezione voto piu lingua */
@@ -263,3 +311,5 @@ img.img-flag-container{
     font-size: 25px;
     font-weight: bold;
 }
+
+
